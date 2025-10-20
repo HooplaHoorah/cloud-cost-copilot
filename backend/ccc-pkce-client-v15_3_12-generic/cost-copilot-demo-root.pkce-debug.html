@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PKCE Debug</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./config.js"></script>
+  <script defer src="./token-ui.js"></script>
+</head>
+<body class="theme-dark">
+  <main class="wrap narrow">
+    <header class="appbar">
+      <div class="brand"><span>PKCE Debug</span></div>
+      <div class="spacer"></div>
+      <button class="btn" id="loginBtn">Login</button>
+      <button class="btn" id="refreshBtn">Refresh Token</button>
+      <button class="btn danger" id="logoutBtn">Logout</button>
+    </header>
+    <section class="card">
+      <h3>Config</h3>
+      <pre id="cfgBox"></pre>
+    </section>
+    <section class="card">
+      <h3>Tokens</h3>
+      <pre id="tokBox">(no tokens)</pre>
+    </section>
+    <section class="card">
+      <h3>Decoded ID Token (header.payload)</h3>
+      <pre id="idBox"></pre>
+    </section>
+    <section class="card">
+      <h3>Decoded Access Token (header.payload)</h3>
+      <pre id="atBox"></pre>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('cfgBox').textContent = JSON.stringify(window.CFG, null, 2);
+      const w = window.CCCTokens && window.CCCTokens.dump();
+      document.getElementById('tokBox').textContent = w ? JSON.stringify(w, null, 2) : '(no tokens)';
+      const id = window.CCCTokens && window.CCCTokens.id();
+      const at = window.CCCTokens && window.CCCTokens.access();
+      const decode = t => t ? atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')) : '';
+      document.getElementById('idBox').textContent = decode(id);
+      document.getElementById('atBox').textContent = decode(at);
+      document.getElementById('loginBtn').onclick = ()=> window.CCCTokens && window.CCCTokens.login();
+      document.getElementById('refreshBtn').onclick = ()=> window.CCCTokens && window.CCCTokens.refresh();
+      document.getElementById('logoutBtn').onclick = ()=> window.CCCTokens && window.CCCTokens.logout();
+    });
+  </script>
+</body>
+</html>

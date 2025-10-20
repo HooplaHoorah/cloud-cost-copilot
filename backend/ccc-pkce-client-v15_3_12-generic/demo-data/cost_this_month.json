@@ -1,0 +1,1 @@
+{"total": 58.22, "services": [["EC2", 27.6], ["S3", 10.2], ["RDS", 15.4], ["Lambda", 3.2], ["CloudWatch", 1.82]]}
